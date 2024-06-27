@@ -15,7 +15,7 @@ CREATE PROCEDURE [dbo].[SimulateDrops2]
 AS
 BEGIN
     
-    SELECT DISTINCT TOP(5)
+    SELECT DISTINCT
         K_NPCPOS.ZoneID,
         K_NPCPOS.NPCId,
         k_monster.strName,
@@ -164,5 +164,3 @@ BEGIN
     DROP TABLE #SimulatedDrops;
 END;
 GO
-
-
