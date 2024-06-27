@@ -9,12 +9,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SimulateDrops2]
+CREATE PROCEDURE [dbo].[SimulateDrops]
     @MonsterSSID INT,
     @NumKills INT = 10000
 AS
-BEGIN
-    
+BEGIN    
     SELECT DISTINCT
         K_NPCPOS.ZoneID,
         K_NPCPOS.NPCId,
@@ -48,26 +47,22 @@ BEGIN
     JOIN #TempKDrops d ON g.iItemGroupNum IN (
         d.iItem01, d.iItem02, d.iItem03, d.iItem04, d.iItem05
     );
-
     
     CREATE TABLE #SimulatedDrops (
         ItemID INT,
         DropCount INT
     );
-
     
     DECLARE @KillCount INT = 0;
     DECLARE @RandValue FLOAT;
     DECLARE @DropChance INT;
     DECLARE @GroupNum INT;
     DECLARE @ItemID INT;
-
     
     WHILE @KillCount < @NumKills
-    BEGIN
-        
-        SET @KillCount = @KillCount + 1;
+    BEGIN        
 
+        SET @KillCount = @KillCount + 1;
         
         DECLARE DropCursor CURSOR FOR
         SELECT iItem01, sPersent01 FROM #TempKDrops
@@ -87,7 +82,6 @@ BEGIN
         BEGIN
             
             SET @RandValue = RAND() * 10000;
-
             
             IF @RandValue <= @DropChance
 			 PRINT 'RandomValue: ' + CAST(@RandValue AS VARCHAR(10));
@@ -129,7 +123,6 @@ BEGIN
                     END
                 END
                 FROM #TempItemGroups;
-
                 
                 INSERT INTO #SimulatedDrops (ItemID, DropCount)
                 VALUES (@ItemID, 1);
@@ -141,7 +134,6 @@ BEGIN
         CLOSE DropCursor;
         DEALLOCATE DropCursor;
     END;
-
     
     SELECT 
         sd.ItemID, 
@@ -157,7 +149,6 @@ BEGIN
         TotalDropCount DESC;
 
 	--SELECT * FROM #TempKDrops
-
     
     DROP TABLE #TempKDrops;
     DROP TABLE #TempItemGroups;
